@@ -64,5 +64,10 @@ public class RNN {
         this.expectedOutput = JMath.vStack(new double[1][expectedOutput.length], JMath.transpose(expectedOutput));
         this.ltsm = new LTSM(input,output,recurrences,learningRate);
     };
+    public static double sigmoid(){
+        //90 percent sure input paramter x is an 1d array and returns a 1d array
+        //np.exp(-x)) the negative in this line is a scalar
+        //np.dot returns the lowest common dimensions 1d by 2d becomes 1d
+    }
 
 }
