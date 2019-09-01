@@ -38,6 +38,8 @@ public class RNN {
     double[][] ao;
     /* Expected output array 2d */
     double[][] expectedOutput;
+    /* LTSM */
+    LTSM ltsm;
     RNN(int input, int output, int recurrences, double[][] expectedOutput ,double learningRate){
         //.T means to transpose
         this.x = new double[input];
@@ -48,11 +50,19 @@ public class RNN {
         this.g = new double[output][output];
         this.recurrences = recurrences;
         this.learningRate = learningRate;
-
+        this.ia = new double[recurrences+1][input];
+        this.ca = new double[recurrences+1][output];
+        this.oa = new double[recurrences+1][output];
+        this.ha = new double[recurrences+1][output];
+        this.af = new double[recurrences+1][output];
+        this.ai = new double[recurrences+1][output];
+        this.ac = new double[recurrences+1][output];
+        this.ao = new double[recurrences+1][output];
         //self.expected_output = np.vstack((np.zeros(expected_output.shape[0]), expected_output.T))
         // expected_output.shape[0] = expectedOutput.length
         //vstack just stacks em together by the row or fist []
-
+        this.expectedOutput = JMath.vStack(new double[1][expectedOutput.length], JMath.transpose(expectedOutput));
+        this.ltsm = new LTSM(input,output,recurrences,learningRate);
     };
 
 }
