@@ -1,9 +1,9 @@
 import java.util.Random;
 /* Class for performing functions normally done by NumPy. */
-public class JMath {
+class JMath {
     JMath(){
 
-    };
+    }
 
     /* Used to transpose a java array */
     public static double[][] transpose(double[][] array){
@@ -40,7 +40,7 @@ public class JMath {
     }
     /* Concatenates two multi dimensional arrays by adding to the end of rows to make larger rows */
     public static double[] hStack(double[] arr1, double[] arr2){
-        double[] hStacked = new double[arr1.length];
+        double[] hStacked = new double[arr1.length + arr2.length];
         for (int i = 0; i < arr1.length; i++){
             hStacked[i] = arr1[i];
         }
@@ -55,9 +55,8 @@ public class JMath {
         double[] product = new double[x.length];
 
         for (int i = 0 ; i < x.length; i++){
-            product[i] = y[i];
             for (int j = 0; j < x[0].length; j++){
-                product[i] *= x[i][j];
+                product[i] += x[i][j] *y[j];
             }
         }
         return product;

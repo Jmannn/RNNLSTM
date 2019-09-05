@@ -122,7 +122,7 @@ public class RNN {
     public double backProp(){
 
         double totalError = 0.0;
-        double[] error = new double[];
+        double[] error = new double[output];
         double[] dfcs = new double[output];
         double[] dfhs = new double[output];
         double[][] tu = new double[output][output];
@@ -136,7 +136,9 @@ public class RNN {
             // this 2d dot product
             tu = JMath.add2dArray(tu, JMath.dotProduct(JMath.atleast2d(
                     JMath.dotProduct(error , dsigmoid(this.oa[i])) ), JMath.transpose(JMath.atleast2d(ha[i]))));
-
+            error = JMath.dotProduct(this.w, error);
+            lstm.x = JMath.hStack(this.ha[i-1], this.ia[i]);
+            lstm.cs = ca[i];
         }
 
         return totalError;
