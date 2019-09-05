@@ -88,7 +88,7 @@ public class RNN {
         }
         return dsigmoidMultiplied;
     }
-    public  void forwardProp(){
+    public double[][] forwardProp(){
 
         //since java cannot return multiple variables at
         // once, you will need to use call the forward prop, and then use getters
@@ -97,7 +97,7 @@ public class RNN {
         double[] f, inp,c, o; // these come from the forward prop only variables
 
         for(int i = 1; i < recurrences+1; i++){
-            lstm.x =
+            lstm.x = JMath.hStack(this.ha[i-1], this.x);
             lstm.forwardProp();
             cs = lstm.cs;
             hs = lstm.hs;
@@ -116,6 +116,33 @@ public class RNN {
             this.x = this.expectedOutput[i-1];
 
         }
+        return this.oa;
+    }
+
+    public double backProp(){
+
+        double totalError = 0.0;
+        double[] error = new double[];
+        double[] dfcs = new double[output];
+        double[] dfhs = new double[output];
+        double[][] tu = new double[output][output];
+        double[][] tfu = new double[output][input+output];
+        double[][] tiu = new double[output][input+output];
+        double[][] tcu = new double[output][input+output];
+        double[][] tou = new double[output][input+output];
+
+        for (int i = this.recurrences; i > -1; i--){
+            error = JMath.difference(this.oa[i], this.expectedOutput[i]);
+            // this 2d dot product
+            tu = JMath.add2dArray(tu, JMath.dotProduct(JMath.atleast2d(
+                    JMath.dotProduct(error , dsigmoid(this.oa[i])) ), JMath.transpose(JMath.atleast2d(ha[i]))));
+
+        }
+
+        return totalError;
+
+
+
     }
 
 
