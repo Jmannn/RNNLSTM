@@ -37,5 +37,18 @@ public class JMath {
         }
         return vStacked;
     }
+    /* For 1d array scalers dot 2d */
+    public static double[] dotProduct(double[][] x, double[] y){
+
+        double[] product = new double[x.length];
+
+        for (int i = 0 ; i < x.length; i++){
+            product[i] = y[i];
+            for (int j = 0; j < x[0].length; j++){
+                product[i] *= x[i][j];
+            }
+        }
+        return product;
+    }
 
 }

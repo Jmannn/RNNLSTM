@@ -39,7 +39,7 @@ public class RNN {
     /* Expected output array 2d */
     double[][] expectedOutput;
     /* LTSM */
-    LTSM ltsm;
+    LTSM lstm;
     RNN(int input, int output, int recurrences, double[][] expectedOutput ,double learningRate){
         //.T means to transpose
         this.x = new double[input];
@@ -62,12 +62,61 @@ public class RNN {
         // expected_output.shape[0] = expectedOutput.length
         //vstack just stacks em together by the row or fist []
         this.expectedOutput = JMath.vStack(new double[1][expectedOutput.length], JMath.transpose(expectedOutput));
-        this.ltsm = new LTSM(input,output,recurrences,learningRate);
+        this.lstm = new LTSM(input,output,recurrences,learningRate);
     };
-    public static double sigmoid(){
+    public double[] sigmoid(double[] x){
         //90 percent sure input paramter x is an 1d array and returns a 1d array
         //np.exp(-x)) the negative in this line is a scalar
         //np.dot returns the lowest common dimensions 1d by 2d becomes 1d
+        //sigmoid function does return an array becuase in python,
+        // when you pass an array to a function, and you return it, it returns multiple
+        // times to a new array.
+        double[] sigmoidMultiplied = new double[x.length];
+        for (int i = 0 ; i < x.length; i++){
+            sigmoidMultiplied[i] = 1 / (1-x[i]);
+        }
+        return sigmoidMultiplied;
     }
+
+    public double[] dsigmoid(double[] x){
+        double[] dsigmoidMultiplied = new double[x.length];
+        for (int i = 0 ; i < x.length; i++){
+            dsigmoidMultiplied[i] = 1 / (1-x[i]);
+        }
+        for (int i = 0 ; i < x.length; i++){
+            dsigmoidMultiplied[i] *= 1 - dsigmoidMultiplied[i];
+        }
+        return dsigmoidMultiplied;
+    }
+    public  void forwardProp(){
+
+        //since java cannot return multiple variables at
+        // once, you will need to use call the forward prop, and then use getters
+
+        double[] cs, hs; //these come from the main class variables
+        double[] f, inp,c, o; // these come from the forward prop only variables
+
+        for(int i = 1; i < recurrences+1; i++){
+            lstm.x =
+            lstm.forwardProp();
+            cs = lstm.cs;
+            hs = lstm.hs;
+            f = lstm.fFP;
+            inp = lstm.iFP;
+            c = lstm.cFP;
+            o = lstm.oFP;
+
+            this.ca[i] = cs;
+            this.ha[i] = hs;
+            this.af[i] = f;
+            this.ai[i] = inp;
+            this.ac[i] = c;
+            this.ao[i] = o;
+            this.oa[i] = sigmoid(JMath.dotProduct(this.w, hs));
+            this.x = this.expectedOutput[i-1];
+
+        }
+    }
+
 
 }
