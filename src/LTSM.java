@@ -4,9 +4,12 @@ public class LTSM {
      * was a workaround I chose. */
     double[] fFP, iFP, cFP, oFP;
 
-
+    double[][] fu, iu, cu, ou, dfcs, dfhs;
 
     public void forwardProp(){
+
+    }
+    public void backProp(){
 
     }
 }

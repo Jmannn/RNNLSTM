@@ -139,12 +139,32 @@ public class RNN {
             error = JMath.dotProduct(this.w, error);
             lstm.x = JMath.hStack(this.ha[i-1], this.ia[i]);
             lstm.cs = ca[i];
+
+            lstm.backProp(error, this.ca[i-1], this.af[i], this.ai[i], this.ac[i], this.ao[i], dfcs, dfhs);
+
+            tfu = JMath.add2dArray(tfu,lstm.fu);
+
+            tiu = JMath.add2dArray(tfu,lstm.iu);
+
+            tcu = JMath.add2dArray(tfu,lstm.cu);
+
+            tou = JMath.add2dArray(tfu,lstm.ou);
+
+
         }
+        this.lstm.update(JMath.divide2d(tcu, this.recurrences),JMath.divide2d(tfu, this.recurrences),
+                JMath.divide2d(tou, this.recurrences),JMath.divide2d(tiu, this.recurrences));
+        update(JMath.divide2d(tu, this.recurrences));
 
         return totalError;
 
 
 
+    }
+    public void update(double[][] u){
+        this.g = JMath.add2dArray(JMath.multiply2d(this.g, 0.95), JMath.multiply2d(JMath.power2d(u, 2), 0.1));
+        //self.w -= self.learning_rate/np.sqrt(self.G + 1e-8) * u
+        this.w = JMath.sub2dArray(this.w, JMath.dotProduct( JMath.dDivide(JMath.power2d(JMath.add2d(this.g,1e-8), 0.5),this.learningRate), u   ));
     }
 
 

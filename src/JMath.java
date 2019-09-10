@@ -105,10 +105,80 @@ class JMath {
         }
         return result;
     }
+    /* Subtracts the indexes together and stores the results in a new
+     * 2d array.
+     */
+    public static double[][] sub2dArray(double[][] arr1, double[][] arr2){
+        double[][] result = new double[arr1.length][arr1[0].length];
+        for(int i = 0; i < arr1.length; i++){
+            for (int j = 0; j < arr1[0].length; j++){
+                result[i][j] = arr1[i][j] - arr2[i][j];
+            }
+        }
+        return result;
+    }
 
     public static double[][] atleast2d(double[] dotProduct) {
         double[][] result = new double[dotProduct.length][dotProduct.length];
         result[0] = dotProduct;
         return result;
+    }
+    /* Returns a new array with the extra 1st dimension size and all the original values. */
+    public static double[][] array2dReSize(double[][] array, int newLength){
+        if (array.length > newLength){
+            return array;
+        } else {
+            double[][] newArray = new double[newLength][array[0].length];
+            for (int i = 0; i < array.length; i++){
+                newArray[i] = array[i];
+            }
+            return newArray;
+        }
+    }
+    /* Divides every element in the array by a scalar */
+    public static double[][] divide2d(double[][] arr, double scalar){
+        for (int i = 0; i<arr.length;i++){
+            for (int j = 0; j<arr[0].length;j++){
+                arr[i][j] /= scalar;
+            }
+        }
+        return arr;
+    }
+    /* M every element in the array by a scalar */
+    public static double[][] multiply2d(double[][] arr, double scalar){
+        for (int i = 0; i<arr.length;i++){
+            for (int j = 0; j<arr[0].length;j++){
+                arr[i][j] *= scalar;
+            }
+        }
+        return arr;
+    }
+    /* adds number to each element in the array  */
+    public static double[][] add2d(double[][] arr, double number){
+        for (int i = 0; i<arr.length;i++){
+            for (int j = 0; j<arr[0].length;j++){
+                arr[i][j] += number;
+            }
+        }
+        return arr;
+    }
+    /* Raises each element by a given power */
+    public static double[][] power2d(double[][] arr, double power){
+        for (int i = 0; i<arr.length;i++){
+            for (int j = 0; j<arr[0].length;j++){
+                arr[i][j] = Math.pow(arr[i][j], power);
+            }
+        }
+        return arr;
+    }
+    /* num is divided by each element in the array */
+    public static double[][] dDivide(double[][] arr, double num){
+        for (int i = 0; i<arr.length;i++){
+            for (int j = 0; j<arr[0].length;j++){
+                arr[i][j] = Math.pow(arr[i][j], num);
+            }
+        }
+        return arr;
+
     }
 }
