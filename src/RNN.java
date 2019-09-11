@@ -100,11 +100,11 @@ public class RNN {
             lstm.x = JMath.hStack(this.ha[i-1], this.x);
             lstm.forwardProp();
             cs = lstm.cs;
-            hs = lstm.hs;
-            f = lstm.fFP;
-            inp = lstm.iFP;
-            c = lstm.cFP;
-            o = lstm.oFP;
+            hs = lstm.y;
+            f = lstm.fF;
+            inp = lstm.iF;
+            c = lstm.cF;
+            o = lstm.oF;
 
             this.ca[i] = cs;
             this.ha[i] = hs;
@@ -142,13 +142,13 @@ public class RNN {
 
             lstm.backProp(error, this.ca[i-1], this.af[i], this.ai[i], this.ac[i], this.ao[i], dfcs, dfhs);
 
-            tfu = JMath.add2dArray(tfu,lstm.fu);
+            tfu = JMath.add2dArray(tfu,lstm.fB);
 
-            tiu = JMath.add2dArray(tfu,lstm.iu);
+            tiu = JMath.add2dArray(tfu,lstm.iB);
 
-            tcu = JMath.add2dArray(tfu,lstm.cu);
+            tcu = JMath.add2dArray(tfu,lstm.cB);
 
-            tou = JMath.add2dArray(tfu,lstm.ou);
+            tou = JMath.add2dArray(tfu,lstm.oB);
 
 
         }
@@ -165,6 +165,29 @@ public class RNN {
         this.g = JMath.add2dArray(JMath.multiply2d(this.g, 0.95), JMath.multiply2d(JMath.power2d(u, 2), 0.1));
         //self.w -= self.learning_rate/np.sqrt(self.G + 1e-8) * u
         this.w = JMath.sub2dArray(this.w, JMath.dotProduct( JMath.dDivide(JMath.power2d(JMath.add2d(this.g,1e-8), 0.5),this.learningRate), u   ));
+    }
+    public double[][]  sample(){
+        double[] cs, hs; //these come from the main class variables
+        double[] f, inp,c, o; // these come from the forward prop only variables
+        for (int i = 1; i < this.recurrences+1; i++){
+            int maxI;
+            //self.LSTM.x = np.hstack((self.ha[i-1], self.x))
+            this.lstm.x = JMath.hStack(this.ha[i-1], this.x);
+
+            lstm.forwardProp();
+            cs = lstm.cs;
+            hs = lstm.y;
+            f = lstm.fF;
+            inp = lstm.iF;
+            c = lstm.cF;
+            o = lstm.oF;
+
+            maxI = JMath.argMax(this.x);
+
+            this.x = new double[this.x.length];
+            this.x[maxI] = 1; // eval this by looking for a greater than, all the rest should be 0 but the value wont be exactly one
+        }
+
     }
 
 

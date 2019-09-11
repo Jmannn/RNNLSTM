@@ -105,6 +105,16 @@ class JMath {
         }
         return result;
     }
+    /* Adds the indexes together and stores the results in a new
+     * 1d array.
+     */
+    public static double[] add1dArray(double[] arr1, double[] arr2){
+        double[] result = new double[arr1.length];
+        for(int i = 0; i < arr1.length; i++){
+            result[i] = arr1[i] + arr2[i];
+        }
+        return result;
+    }
     /* Subtracts the indexes together and stores the results in a new
      * 2d array.
      */
@@ -180,5 +190,15 @@ class JMath {
         }
         return arr;
 
+    }
+    /*Returns the indicie of the largest value */
+    public static int argMax(double[] arr){
+        int largest = 0;
+        for (int i = 0; i < arr.length; i++){
+            if (arr[largest]< arr[i]){
+                largest = i;
+            }
+        }
+        return largest;
     }
 }
