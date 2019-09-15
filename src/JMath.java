@@ -127,11 +127,18 @@ class JMath {
         }
         return result;
     }
-
+    //Todo: finish this method
     public static double[][] atleast2d(double[] dotProduct) {
         double[][] result = new double[dotProduct.length][dotProduct.length];
         result[0] = dotProduct;
         return result;
+    }
+    public static double sum1D(double[] arr){
+        double sum = 0;
+        for (int i = 0 ; i < arr.length ; i++){
+            sum += arr[i];
+        }
+        return sum;
     }
     /* Returns a new array with the extra 1st dimension size and all the original values. */
     public static double[][] array2dReSize(double[][] array, int newLength){
@@ -200,5 +207,32 @@ class JMath {
             }
         }
         return largest;
+    }
+    /* Ensures all values are with in a certain range to prevent escaping gradient problem. */
+    public static double[] clip(double[] arr, double upperLimit, double lowerLimit){
+        for (int i = 0 ; i < arr.length; i++){
+            if (arr[i] > upperLimit){
+                arr[i] = upperLimit;
+            } else if (arr[i]< lowerLimit){
+                arr[i] = lowerLimit;
+            }
+        }
+        return arr;
+    }
+    public static double[] subArray(double[] arr, int lower, int upper){
+        double[] newArray = new double[arr.length-lower-(arr.length-upper)];
+        for (int i = lower; i<upper; i++){
+            newArray[i-lower] = arr[i];
+        }
+        return newArray;
+    }
+    public static double[][] divideByArray(double num, double[][] arr){
+        double[][] result = new double[arr.length][arr[0].length];
+        for (int i = 0; i < arr.length; i++){
+            for (int j = 0; j < arr[0].length; j++) {
+                result[i][j] = num / arr[i][j];
+            }
+        }
+        return result;
     }
 }

@@ -142,13 +142,18 @@ public class RNN {
 
             lstm.backProp(error, this.ca[i-1], this.af[i], this.ai[i], this.ac[i], this.ao[i], dfcs, dfhs);
 
+            totalError = JMath.sum1D(error);
+
             tfu = JMath.add2dArray(tfu,lstm.fB);
 
-            tiu = JMath.add2dArray(tfu,lstm.iB);
+            tiu = JMath.add2dArray(tiu,lstm.iB);
 
-            tcu = JMath.add2dArray(tfu,lstm.cB);
+            tcu = JMath.add2dArray(tcu,lstm.cB);
 
-            tou = JMath.add2dArray(tfu,lstm.oB);
+            tou = JMath.add2dArray(tou,lstm.oB);
+
+            dfcs = lstm.dfcs;
+            dfhs = lstm.dfhs;
 
 
         }
@@ -187,7 +192,7 @@ public class RNN {
             this.x = new double[this.x.length];
             this.x[maxI] = 1; // eval this by looking for a greater than, all the rest should be 0 but the value wont be exactly one
         }
-
+        return this.oa;
     }
 
 
