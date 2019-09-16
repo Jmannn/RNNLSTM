@@ -127,6 +127,13 @@ class JMath {
         }
         return result;
     }
+    public static double[] copyFromIntArray(int[] source) {
+        double[] dest = new double[source.length];
+        for(int i=0; i<source.length; i++) {
+            dest[i] = source[i];
+        }
+        return dest;
+    }
     //Todo: finish this method
     public static double[][] atleast2d(double[] dotProduct) {
         double[][] result = new double[dotProduct.length][dotProduct.length];
@@ -235,4 +242,17 @@ class JMath {
         }
         return result;
     }
+    /* Takes double array as input and transfers the contents to a single horizontal array */
+    public static double[] ravel(double[][] arr2D){
+        double[] arr1D = new double[(arr2D.length * arr2D[0].length)];
+        int firstDimensionPointer = 0;
+        for (int i = 0; i < arr2D.length; i++){
+            for (int j = 0; j < arr2D[0].length; j++) {
+                arr1D[firstDimensionPointer] = arr2D[i][j];
+                firstDimensionPointer++;
+            }
+        }
+        return arr1D;
+    }
+    // % modulus
 }

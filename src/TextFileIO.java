@@ -1,7 +1,10 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
+import java.lang.StringBuilder;
 
 public class TextFileIO {
 
@@ -75,6 +78,36 @@ public class TextFileIO {
             e.printStackTrace();
         }
 
+    }
+    /*
+
+    for i in range(0, output.shape[0]):W
+        for j in range(0, output.shape[1]):
+            prob[j] = output[i][j] / np.sum(output[i])
+        outputText += np.random.choice(data, p=prob)
+    return
+
+     */
+    public void export(double[][] output, char[] data, String filename){
+        StringBuilder outputText = new StringBuilder();//use .append() for char
+        WeightedRandom wr;
+        double[] prob = new double[output[0].length];
+        for (int i = 0; i < output.length; i++) {
+            for (int j = 0; j < output[i].length; j++) {
+                prob[j] = output[i][j] / JMath.sum1D(output[i]);
+            }
+            wr = new WeightedRandom(data, prob);
+            //outputText += np.random.choice(data, p=prob)
+            outputText.append(wr.pick());
+            //p assigns a choice to each one of the array indexes
+        }
+
+        try  {
+            PrintWriter pw = new PrintWriter(filename);
+            pw.println(outputText.toString());
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
     }
     public int[][] getReturnData() {
         return returnData;
