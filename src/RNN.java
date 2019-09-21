@@ -58,11 +58,12 @@ public class RNN {
         this.ai = new double[recurrences+1][output];
         this.ac = new double[recurrences+1][output];
         this.ao = new double[recurrences+1][output];
-        //self.expected_output = np.vstack((np.zeros(expected_output.shape[0]), expected_output.T))
-        // expected_output.shape[0] = expectedOutput.length
-        //vstack just stacks em together by the row or fist []
+      //either vstack, transpose or the thing that created the array io
         this.expectedOutput = JMath.vStack(new double[1][expectedOutput.length], JMath.transpose(expectedOutput));
+        System.out.println("Starting the lstm");
         this.lstm = new LTSM(input,output,recurrences,learningRate);
+        System.out.println("RNN init complete");
+        System.out.println("reccurrences : "+recurrences);
     };
     public double[] sigmoid(double[] x){
         //90 percent sure input paramter x is an 1d array and returns a 1d array
@@ -114,7 +115,6 @@ public class RNN {
             this.ao[i] = o;
             this.oa[i] = sigmoid(JMath.dotProduct(this.w, hs));
             this.x = this.expectedOutput[i-1];
-
         }
         return this.oa;
     }
@@ -133,9 +133,9 @@ public class RNN {
 
         for (int i = this.recurrences; i > -1; i--){
             error = JMath.difference(this.oa[i], this.expectedOutput[i]);
-            // this 2d dot product
-            tu = JMath.add2dArray(tu, JMath.dotProduct(JMath.atleast2d(
-                    JMath.dotProduct(error , dsigmoid(this.oa[i])) ), JMath.transpose(JMath.atleast2d(ha[i]))));
+
+            tu = JMath.add2d(tu,
+                    JMath.dotProduct(JMath.atleast2d(JMath.dotProduct(error,dsigmoid(this.oa[i]))), JMath.transpose(JMath.atleast2d(ha[i])))[0][0]);
             error = JMath.dotProduct(this.w, error);
             lstm.x = JMath.hStack(this.ha[i-1], this.ia[i]);
             lstm.cs = ca[i];
@@ -143,7 +143,11 @@ public class RNN {
             lstm.backProp(error, this.ca[i-1], this.af[i], this.ai[i], this.ac[i], this.ao[i], dfcs, dfhs);
 
             totalError = JMath.sum1D(error);
-
+            System.out.println();
+            System.out.println("tfu "+tfu.length + " : " + tfu[0].length);
+            System.out.println("lstm.fB "+lstm.fB.length + " : " + lstm.fB[0].length);
+            System.out.println();
+            //todo: Both of these meant to be 10 by 20 but lstm.fB is not
             tfu = JMath.add2dArray(tfu,lstm.fB);
 
             tiu = JMath.add2dArray(tiu,lstm.iB);

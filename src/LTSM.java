@@ -108,8 +108,15 @@ public class LTSM {
         iu = JMath.dotProduct(JMath.transpose(JMath.atleast2d(JMath.dotProduct(di, dsigmoid(i)))),
                 JMath.atleast2d(this.x));
         df = JMath.dotProduct(dcs, pcs);
-        fu = JMath.dotProduct(JMath.transpose(JMath.atleast2d(JMath.dotProduct(df, dsigmoid(f)))),
-                JMath.atleast2d(this.x));
+        System.out.println();
+        System.out.println("df "+df.length);
+        System.out.println("f "+f.length);
+        System.out.println("x 2d "+ JMath.atleast2d(this.x).length + " " +JMath.atleast2d(this.x)[0].length);
+        //Todo: found the bug it was here all along, either at least 2d, dot prod, transpose or dsigmoid
+        // Remove method when checked  dotproduct <-error is here
+        //JMath.printArray(dsigmoid(.));
+        System.out.println(JMath.transpose(JMath.atleast2d(JMath.dotProduct(df, dsigmoid(f))))[0].length);
+        fu = JMath.dotProduct( JMath.transpose(JMath.atleast2d(JMath.dotProduct(df, dsigmoid(f)))), JMath.atleast2d(this.x) );
         dpcs = JMath.dotProduct(dcs, f);
         //dphs = np.dot(dc, self.c)[:self.output] + np.dot(do, self.o)[:self.output] + np.dot(di, self.i)[:self.output] + np.dot(df, self.f)[:self.output]
         //np.dot(dc, self.c)[:self.output] <- this is the subarray syntax

@@ -1,6 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
@@ -15,8 +14,8 @@ public class TextFileIO {
 
     private char[] text;
     private char[] uniqueCharArray;
-    private int[][] returnData;
-    private int[][] output;
+    private double[][] returnData;
+    private double[][] output;
     private int outputSize;
     private int uniqueWordsNum;
     private int dataSize;
@@ -31,14 +30,19 @@ public class TextFileIO {
             String word = "";
 
             this.file = new File(fileName);
-            this.scan = new Scanner(this.file);
-            while (this.scan.hasNext()){
-                word = scan.next();
-                for (int i = 0; i < word.length(); i++){
-                    characterList.add(word.charAt(i));
-                    if (!uniqueCharList.contains(word.charAt(i))){
-                        uniqueCharList.add(word.charAt(i));
-                    }
+            Charset encoding = Charset.defaultCharset();
+            InputStream in = new FileInputStream(this.file);
+            Reader reader = new InputStreamReader(in, encoding);
+            // buffer for efficiency
+            Reader buffer = new BufferedReader(reader);
+            char c = ' ';
+            int r;
+            while ((r =  buffer.read()) != -1){
+                c = (char) r;
+                characterList.add(c);
+                System.out.println(c);
+                if (!uniqueCharList.contains(c)){
+                    uniqueCharList.add(c);
                 }
             }
             this.text = new char[characterList.size()];
@@ -53,19 +57,25 @@ public class TextFileIO {
             this.outputSize = text.length;
             this.uniqueWordsNum = dataSize = uniqueCharArray.length;
 
-            returnData = new int[uniqueWordsNum+1][dataSize];
+            returnData = new double[uniqueWordsNum+1][dataSize];
             for (int i = 0; i < dataSize; i++){
                 returnData[i][i] = 1;
             }
-            output = new int[uniqueWordsNum][outputSize];
+            output = new double[uniqueWordsNum][outputSize];
             int index =-1;
+            //loop should be output size
+            System.out.println("output: S: "+outputSize);
             for (int i = 0; i < outputSize; i++) {
                 for (int j = 0; j < uniqueCharArray.length; j++) {
                     if (text[i] == uniqueCharArray[j]){
                         index = j;
                     }
                 }
-                output[i] = returnData[index];
+                System.out.println(output.length + " " + output[0].length);
+                //this does not work because in python you are extracting a row
+                //and store it in row
+                //also, it is the ravel of the column
+                output = JMath.addColumn(returnData, output, index, i);
             }
             this.returnData = returnData;
             this.output = output;
@@ -104,18 +114,19 @@ public class TextFileIO {
 
         try  {
             PrintWriter pw = new PrintWriter(filename);
+            pw.append("   Done!");
             pw.println(outputText.toString());
         } catch (FileNotFoundException e){
             e.printStackTrace();
         }
     }
-    public int[][] getReturnData() {
+    public double[][] getReturnData() {
         return returnData;
     }
     public char[] getText() {
         return text;
     }
-    public int[][] getOutput() {
+    public double[][] getOutput() {
         return output;
     }
     public int getUniqueWordsNum() {
@@ -123,6 +134,9 @@ public class TextFileIO {
     }
     public int getOutputSize() {
         return outputSize;
+    }
+    public char[] getData() {
+        return data;
     }
 }
 /*

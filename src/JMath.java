@@ -16,11 +16,12 @@ class JMath {
         return arrayT;
     }
     /* Initializes a 2d array of doubles with random values */
+    // BROKEN !!
     public static double[][] randomSample2D(int x, int y){
         Random random = new Random();
         double[][] newArray = new double[x][y];
         for (int i = 0; i < x; i++){
-            for (int j = 0; j < y; y++){
+            for (int j = 0; j < y; j++){
                 newArray[i][j] = random.nextGaussian();
             }
         }
@@ -56,7 +57,7 @@ class JMath {
 
         for (int i = 0 ; i < x.length; i++){
             for (int j = 0; j < x[0].length; j++){
-                product[i] += x[i][j] *y[j];
+                product[i] += x[i][j] *y[i];
             }
         }
         return product;
@@ -76,10 +77,19 @@ class JMath {
     public static double[][] dotProduct(double[][] x, double[][] y){
 
         double[][] product = new double[x.length][x[0].length];
-
-        for (int i = 0 ; i < x.length; i++){
-            for (int j = 0; j < x[0].length; j++){
-                product[i][j] = x[i][j] * y[i][j];
+        //product = new [1][1]
+        if(y.length == x[0].length){
+            product = new double[1][1];
+            for (int i = 0; i < y.length; i++) {
+                product[0][0] += y[i][0] * x[0][i];
+            }
+        } else {
+            for (int i = 0 ; i < x.length; i++){
+                for (int j = 0; j < x[0].length; j++){
+                    System.out.println(y.length);
+                    System.out.println(x.length);
+                    product[i][j] = x[i][j] * y[i][j];
+                }
             }
         }
         return product;
@@ -136,7 +146,7 @@ class JMath {
     }
     //Todo: finish this method
     public static double[][] atleast2d(double[] dotProduct) {
-        double[][] result = new double[dotProduct.length][dotProduct.length];
+        double[][] result = new double[1][dotProduct.length];
         result[0] = dotProduct;
         return result;
     }
@@ -254,5 +264,40 @@ class JMath {
         }
         return arr1D;
     }
+    public static double[][] intToDouble2D(int[][] arr){
+        double[][] result = new double[arr.length][arr[0].length];
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                result[i][j] = arr[i][j];
+            }
+        }
+        return result;
+    }
     // % modulus
+    // sets col of arr2 to col of ar1
+    public static double[][] addColumn(double[][] reTurn, double[][] output, int index, int col2){
+        //printArray(reTurn);
+        //printArray(output);
+        for (int i = 0; i < output.length; i++) {
+            output[i][col2] = reTurn[i][index];
+        }
+        return output;
+    }
+    public static void printArray(double[][] arr){
+        System.out.println("********");
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                System.out.print(arr[i][j] + " ");
+            }
+            System.out.println("\n --------");
+
+        }
+        System.out.println("********");
+
+    }
+    public static void printArray(double[] arr){
+        for (int j = 0; j < arr.length; j++) {
+            System.out.print(arr[j] + " ");
+        }
+    }
 }
