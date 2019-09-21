@@ -25,6 +25,7 @@ class JMath {
                 newArray[i][j] = random.nextGaussian();
             }
         }
+
         return newArray;
     }
     /* Concatenates two multi dimensional arrays, only concat first dimension.
@@ -74,20 +75,28 @@ class JMath {
         return product;
     }
     /* For 2d by 2d arrays*/
-    public static double[][] dotProduct(double[][] x, double[][] y){
+    public static double[][] dotProduct(double[][] x, double[][] y) {
 
         double[][] product = new double[x.length][x[0].length];
         //product = new [1][1]
-        if(y.length == x[0].length){
+        if (y.length == x[0].length && y[0].length == x.length) {
             product = new double[1][1];
-            for (int i = 0; i < y.length; i++) {
+            for (int i = 0; i < x[0].length; i++) {
                 product[0][0] += y[i][0] * x[0][i];
             }
-        } else {
+        }else if((y.length == x[0].length && y[0].length != x.length && y.length == 1)){
+            //Todo: build this
+            product = new double[x.length][y[0].length];
+
+            for (int i = 0; i < product.length; i++) {
+                product[i] = y[0];
+                for (int j = 0; j < product[0].length; j++) {
+                    product[i][j] *= x[i][0];
+                }
+            }
+        }else {
             for (int i = 0 ; i < x.length; i++){
                 for (int j = 0; j < x[0].length; j++){
-                    System.out.println(y.length);
-                    System.out.println(x.length);
                     product[i][j] = x[i][j] * y[i][j];
                 }
             }

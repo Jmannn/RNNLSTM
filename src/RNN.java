@@ -133,21 +133,25 @@ public class RNN {
 
         for (int i = this.recurrences; i > -1; i--){
             error = JMath.difference(this.oa[i], this.expectedOutput[i]);
-
+            //Todo: find out why these arrays have no values
             tu = JMath.add2d(tu,
                     JMath.dotProduct(JMath.atleast2d(JMath.dotProduct(error,dsigmoid(this.oa[i]))), JMath.transpose(JMath.atleast2d(ha[i])))[0][0]);
+
             error = JMath.dotProduct(this.w, error);
-            lstm.x = JMath.hStack(this.ha[i-1], this.ia[i]);
+
+            if (i == 0) {
+                lstm.x = JMath.hStack(this.ha[this.ha.length-1], this.ia[i]);
+            } else {
+                lstm.x = JMath.hStack(this.ha[i-1], this.ia[i]);
+            }
             lstm.cs = ca[i];
-
-            lstm.backProp(error, this.ca[i-1], this.af[i], this.ai[i], this.ac[i], this.ao[i], dfcs, dfhs);
-
+            if (i == 0) {
+                lstm.backProp(error, this.ca[this.ca.length - 1], this.af[i], this.ai[i], this.ac[i], this.ao[i], dfcs, dfhs);
+            } else {
+                lstm.backProp(error, this.ca[i-1], this.af[i], this.ai[i], this.ac[i], this.ao[i], dfcs, dfhs);
+            }
             totalError = JMath.sum1D(error);
-            System.out.println();
-            System.out.println("tfu "+tfu.length + " : " + tfu[0].length);
-            System.out.println("lstm.fB "+lstm.fB.length + " : " + lstm.fB[0].length);
-            System.out.println();
-            //todo: Both of these meant to be 10 by 20 but lstm.fB is not
+
             tfu = JMath.add2dArray(tfu,lstm.fB);
 
             tiu = JMath.add2dArray(tiu,lstm.iB);
@@ -181,8 +185,11 @@ public class RNN {
         for (int i = 1; i < this.recurrences+1; i++){
             int maxI;
             //self.LSTM.x = np.hstack((self.ha[i-1], self.x))
-            this.lstm.x = JMath.hStack(this.ha[i-1], this.x);
-
+            if (i==0) {
+                this.lstm.x = JMath.hStack(this.ha[this.ha.length - 1], this.x);
+            } else {
+                this.lstm.x = JMath.hStack(this.ha[i - 1], this.x);
+            }
             lstm.forwardProp();
             cs = lstm.cs;
             hs = lstm.y;

@@ -64,14 +64,14 @@ public class TextFileIO {
             output = new double[uniqueWordsNum][outputSize];
             int index =-1;
             //loop should be output size
-            System.out.println("output: S: "+outputSize);
+            //System.out.println("output: S: "+outputSize);
             for (int i = 0; i < outputSize; i++) {
                 for (int j = 0; j < uniqueCharArray.length; j++) {
                     if (text[i] == uniqueCharArray[j]){
                         index = j;
                     }
                 }
-                System.out.println(output.length + " " + output[0].length);
+                //System.out.println(output.length + " " + output[0].length);
                 //this does not work because in python you are extracting a row
                 //and store it in row
                 //also, it is the ravel of the column
@@ -80,6 +80,7 @@ public class TextFileIO {
             this.returnData = returnData;
             this.output = output;
             this.outputSize = outputSize;
+            System.out.println("outputSIz "+outputSize);
             this.data = uniqueCharArray;
             this.uniqueWordsNum = uniqueCharArray.length;
 
