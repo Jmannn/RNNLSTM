@@ -102,11 +102,15 @@ public class TextFileIO {
     public void export(double[][] output, char[] data, String filename){
         StringBuilder outputText = new StringBuilder();//use .append() for char
         WeightedRandom wr;
+        JMath.printArray(output);
         double[] prob = new double[output[0].length];
+
         for (int i = 0; i < output.length; i++) {
             for (int j = 0; j < output[i].length; j++) {
+
                 prob[j] = output[i][j] / JMath.sum1D(output[i]);
             }
+
             wr = new WeightedRandom(data, prob);
             //outputText += np.random.choice(data, p=prob)
             outputText.append(wr.pick());

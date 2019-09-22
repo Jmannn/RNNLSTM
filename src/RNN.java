@@ -101,11 +101,17 @@ public class RNN {
             lstm.x = JMath.hStack(this.ha[i-1], this.x);
             lstm.forwardProp();
             cs = lstm.cs;
+            JMath.containsNAN(cs);
             hs = lstm.y;
+            JMath.containsNAN(hs);
             f = lstm.fF;
+            JMath.containsNAN(f);
             inp = lstm.iF;
+            JMath.containsNAN(inp);
             c = lstm.cF;
+            JMath.containsNAN(c);
             o = lstm.oF;
+            JMath.containsNAN(o);
 
             this.ca[i] = cs;
             this.ha[i] = hs;
@@ -113,14 +119,16 @@ public class RNN {
             this.ai[i] = inp;
             this.ac[i] = c;
             this.ao[i] = o;
+            //TODO: hs appears to be nan lstm.y
             this.oa[i] = sigmoid(JMath.dotProduct(this.w, hs));
             this.x = this.expectedOutput[i-1];
+            JMath.containsNAN(this.oa);
+            JMath.containsNAN(this.x);
         }
         return this.oa;
     }
 
     public double backProp(){
-
         double totalError = 0.0;
         double[] error = new double[output];
         double[] dfcs = new double[output];
@@ -133,42 +141,51 @@ public class RNN {
 
         for (int i = this.recurrences; i > -1; i--){
             error = JMath.difference(this.oa[i], this.expectedOutput[i]);
+            JMath.containsNAN(error);
             //Todo: find out why these arrays have no values
             tu = JMath.add2d(tu,
                     JMath.dotProduct(JMath.atleast2d(JMath.dotProduct(error,dsigmoid(this.oa[i]))), JMath.transpose(JMath.atleast2d(ha[i])))[0][0]);
-
+            JMath.containsNAN(tu);
             error = JMath.dotProduct(this.w, error);
-
+            JMath.containsNAN(error);
             if (i == 0) {
                 lstm.x = JMath.hStack(this.ha[this.ha.length-1], this.ia[i]);
             } else {
                 lstm.x = JMath.hStack(this.ha[i-1], this.ia[i]);
             }
+            JMath.containsNAN(lstm.x);
             lstm.cs = ca[i];
+            JMath.containsNAN(lstm.cs);
             if (i == 0) {
                 lstm.backProp(error, this.ca[this.ca.length - 1], this.af[i], this.ai[i], this.ac[i], this.ao[i], dfcs, dfhs);
             } else {
                 lstm.backProp(error, this.ca[i-1], this.af[i], this.ai[i], this.ac[i], this.ao[i], dfcs, dfhs);
             }
+            error = lstm.error;
+            JMath.containsNAN(error);
             totalError = JMath.sum1D(error);
-
+            //TODO: tfu tiu
+            JMath.containsNAN(lstm.fB);
             tfu = JMath.add2dArray(tfu,lstm.fB);
-
+            JMath.containsNAN(tfu);
             tiu = JMath.add2dArray(tiu,lstm.iB);
+            JMath.containsNAN(tiu);
 
             tcu = JMath.add2dArray(tcu,lstm.cB);
-
+            JMath.containsNAN(tcu);
             tou = JMath.add2dArray(tou,lstm.oB);
-
+            JMath.containsNAN(tou);
             dfcs = lstm.dfcs;
+            JMath.containsNAN(dfcs);
             dfhs = lstm.dfhs;
+            JMath.containsNAN(dfhs);
 
 
-        }
+        }//TODO: second and 4th args are NAN
+
         this.lstm.update(JMath.divide2d(tcu, this.recurrences),JMath.divide2d(tfu, this.recurrences),
                 JMath.divide2d(tou, this.recurrences),JMath.divide2d(tiu, this.recurrences));
         update(JMath.divide2d(tu, this.recurrences));
-
         return totalError;
 
 
@@ -177,6 +194,10 @@ public class RNN {
     public void update(double[][] u){
         this.g = JMath.add2dArray(JMath.multiply2d(this.g, 0.95), JMath.multiply2d(JMath.power2d(u, 2), 0.1));
         //self.w -= self.learning_rate/np.sqrt(self.G + 1e-8) * u
+        //Todo: this.w is fine, bug is in the second part currently says (1,1) but should say (10, 10)
+        //the error is in the dot product, it may be something to do with the fact 10 10 is not going to work with it
+        //its triggering the first one because it is seeing that 10 and 10 are the same, need another condition to prevent this
+        System.out.println("the last call");
         this.w = JMath.sub2dArray(this.w, JMath.dotProduct( JMath.dDivide(JMath.power2d(JMath.add2d(this.g,1e-8), 0.5),this.learningRate), u   ));
     }
     public double[][]  sample(){

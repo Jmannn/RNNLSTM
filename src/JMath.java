@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.Random;
 /* Class for performing functions normally done by NumPy. */
 class JMath {
@@ -33,10 +34,10 @@ class JMath {
     public static double[][] vStack(double[][] arr1, double[][] arr2){
         double[][] vStacked = new double[arr1.length+arr2.length][arr1[0].length];
         for(int i = 0 ; i < arr1.length; i++){
-            vStacked[i] = arr1[i];
+            vStacked[i] = copyArray(arr1[i]);
         }
         for(int i = arr1.length; i<arr1.length+arr2.length; i++){
-            vStacked[i] = arr2[i-arr1.length];
+            vStacked[i] = copyArray(arr2[i-arr1.length]);
         }
         return vStacked;
     }
@@ -79,7 +80,7 @@ class JMath {
 
         double[][] product = new double[x.length][x[0].length];
         //product = new [1][1]
-        if (y.length == x[0].length && y[0].length == x.length) {
+        if (y.length == x[0].length && y[0].length == x.length && y[0].length == 1 && x.length == 1) {
             product = new double[1][1];
             for (int i = 0; i < x[0].length; i++) {
                 product[0][0] += y[i][0] * x[0][i];
@@ -89,7 +90,7 @@ class JMath {
             product = new double[x.length][y[0].length];
 
             for (int i = 0; i < product.length; i++) {
-                product[i] = y[0];
+                product[i] = copyArray(y[0]);
                 for (int j = 0; j < product[0].length; j++) {
                     product[i][j] *= x[i][0];
                 }
@@ -146,17 +147,11 @@ class JMath {
         }
         return result;
     }
-    public static double[] copyFromIntArray(int[] source) {
-        double[] dest = new double[source.length];
-        for(int i=0; i<source.length; i++) {
-            dest[i] = source[i];
-        }
-        return dest;
-    }
-    //Todo: finish this method
+
+    //Todo: finish this method c
     public static double[][] atleast2d(double[] dotProduct) {
         double[][] result = new double[1][dotProduct.length];
-        result[0] = dotProduct;
+        result[0] = copyArray(dotProduct);
         return result;
     }
     public static double sum1D(double[] arr){
@@ -167,7 +162,8 @@ class JMath {
         return sum;
     }
     /* Returns a new array with the extra 1st dimension size and all the original values. */
-    public static double[][] array2dReSize(double[][] array, int newLength){
+    public static double[][] array2dReSize(double[][] arrayOR, int newLength){
+        double[][] array = copyArray(arrayOR);
         if (array.length > newLength){
             return array;
         } else {
@@ -179,7 +175,8 @@ class JMath {
         }
     }
     /* Divides every element in the array by a scalar */
-    public static double[][] divide2d(double[][] arr, double scalar){
+    public static double[][] divide2d(double[][] arrOR, double scalar){
+        double[][] arr = copyArray(arrOR);
         for (int i = 0; i<arr.length;i++){
             for (int j = 0; j<arr[0].length;j++){
                 arr[i][j] /= scalar;
@@ -188,7 +185,8 @@ class JMath {
         return arr;
     }
     /* M every element in the array by a scalar */
-    public static double[][] multiply2d(double[][] arr, double scalar){
+    public static double[][] multiply2d(double[][] arrOR, double scalar){
+        double[][] arr = copyArray(arrOR);
         for (int i = 0; i<arr.length;i++){
             for (int j = 0; j<arr[0].length;j++){
                 arr[i][j] *= scalar;
@@ -197,7 +195,8 @@ class JMath {
         return arr;
     }
     /* adds number to each element in the array  */
-    public static double[][] add2d(double[][] arr, double number){
+    public static double[][] add2d(double[][] arrOR, double number){
+        double[][] arr = copyArray(arrOR);
         for (int i = 0; i<arr.length;i++){
             for (int j = 0; j<arr[0].length;j++){
                 arr[i][j] += number;
@@ -206,7 +205,8 @@ class JMath {
         return arr;
     }
     /* Raises each element by a given power */
-    public static double[][] power2d(double[][] arr, double power){
+    public static double[][] power2d(double[][] arrOR, double power){
+        double[][] arr = copyArray(arrOR);
         for (int i = 0; i<arr.length;i++){
             for (int j = 0; j<arr[0].length;j++){
                 arr[i][j] = Math.pow(arr[i][j], power);
@@ -215,7 +215,8 @@ class JMath {
         return arr;
     }
     /* num is divided by each element in the array */
-    public static double[][] dDivide(double[][] arr, double num){
+    public static double[][] dDivide(double[][] arrOR, double num){
+        double[][] arr = copyArray(arrOR);
         for (int i = 0; i<arr.length;i++){
             for (int j = 0; j<arr[0].length;j++){
                 arr[i][j] = Math.pow(arr[i][j], num);
@@ -235,7 +236,8 @@ class JMath {
         return largest;
     }
     /* Ensures all values are with in a certain range to prevent escaping gradient problem. */
-    public static double[] clip(double[] arr, double upperLimit, double lowerLimit){
+    public static double[] clip(double[] arrOr, double upperLimit, double lowerLimit){
+        double[] arr = copyArray(arrOr);
         for (int i = 0 ; i < arr.length; i++){
             if (arr[i] > upperLimit){
                 arr[i] = upperLimit;
@@ -284,9 +286,11 @@ class JMath {
     }
     // % modulus
     // sets col of arr2 to col of ar1
-    public static double[][] addColumn(double[][] reTurn, double[][] output, int index, int col2){
+    //Todo: fix this, needs a clone method
+    public static double[][] addColumn(double[][] reTurn, double[][] input, int index, int col2){
         //printArray(reTurn);
         //printArray(output);
+        double[][] output = copyArray(input);
         for (int i = 0; i < output.length; i++) {
             output[i][col2] = reTurn[i][index];
         }
@@ -305,8 +309,85 @@ class JMath {
 
     }
     public static void printArray(double[] arr){
+        System.out.println("======================");
         for (int j = 0; j < arr.length; j++) {
             System.out.print(arr[j] + " ");
+        }
+        System.out.println("\n======================");
+    }
+    public static double[] copyArray(double[] arr){
+        double[] clone = new double[arr.length];
+        for (int i = 0; i < clone.length; i++) {
+            clone[i] = arr[i];
+        }
+        return clone;
+    }
+    public static double[][] copyArray(double[][] arr){
+        double[][] clone = new double[arr.length][arr[0].length];
+        for (int i = 0; i < clone.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                clone[i][j] = arr[i][j];
+            }
+        }
+        return clone;
+    }
+    public static void containsNAN(double[][] arr){
+        boolean nan = false;
+        int totalNAN = 0, total = 0;
+        for (int i = 0; i < arr.length ; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if (Double.isNaN(arr[i][j])){
+                    nan = true;
+                    totalNAN++;
+                    printArray(arr);
+                    throw new IllegalArgumentException("Contains NAN");
+                }
+                total++;
+            }
+        }
+
+    }
+    public static void containsNAN(double[] arr) {
+        boolean nan = false;
+        int totalNAN = 0, total = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (Double.isNaN(arr[i])) {
+                nan = true;
+                totalNAN++;
+                printArray(arr);
+                throw new IllegalArgumentException("Contains NAN");
+            }
+            total++;
+        }
+
+    }
+    public static void containsInfinity(double[] arr) {
+        boolean nan = false;
+        int totalNAN = 0, total = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (Double.isInfinite(arr[i])) {
+                nan = true;
+                totalNAN++;
+                printArray(arr);
+                throw new IllegalArgumentException("Contains Negative Infinity");
+            }
+            total++;
+        }
+
+    }
+    public static void containsInfinity(double[][] arr){
+        boolean nan = false;
+        int totalNAN = 0, total = 0;
+        for (int i = 0; i < arr.length ; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if (Double.isInfinite(arr[i][j])){
+                    nan = true;
+                    totalNAN++;
+                    printArray(arr);
+                    throw new IllegalArgumentException("Contains Infinity");
+                }
+                total++;
+            }
         }
     }
 }

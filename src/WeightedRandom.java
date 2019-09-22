@@ -26,6 +26,9 @@ public class WeightedRandom {
     public double pick() {
         double value = random.nextDouble() * total;
         System.err.println("Fails at pick method of WR");
+        for (NavigableMap.Entry<Double, Character> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue().toString());
+        }
         return map.higherEntry(value).getValue();
     }
 }
