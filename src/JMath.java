@@ -58,8 +58,8 @@ class JMath {
         double[] product = new double[x.length];
 
         for (int i = 0 ; i < x.length; i++){
-            for (int j = 0; j < x[0].length; j++){
-                product[i] += x[i][j] *y[i];
+            for (int j = 0; j < y.length; j++){
+                product[i] += x[i][j] *y[j];
             }
         }
         return product;
@@ -387,6 +387,24 @@ class JMath {
                     throw new IllegalArgumentException("Contains Infinity");
                 }
                 total++;
+            }
+        }
+    }
+    public static void isOne(double[] arr){
+        for (int i = 0 ; i < arr.length; i++){
+            if ((int) (arr[i] * 10) == 10){
+                printArray(arr);
+                throw new IllegalArgumentException("Contains 1.0");
+            }
+        }
+    }
+    public static void isOne(double[][] arr){
+        for (int i = 0; i < arr.length ; i++) {
+            for (int j = 0 ; j < arr.length; j++){
+                if (((int) (arr[i][j] * 10) == 10) && arr[i][j] <1.0000000001){
+                    printArray(arr);
+                    throw new IllegalArgumentException("Contains 1.0");
+                }
             }
         }
     }

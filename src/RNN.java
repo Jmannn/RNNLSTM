@@ -74,7 +74,7 @@ public class RNN {
         // times to a new array.
         double[] sigmoidMultiplied = new double[x.length];
         for (int i = 0 ; i < x.length; i++){
-            sigmoidMultiplied[i] = 1 / (1-x[i]);
+            sigmoidMultiplied[i] = 1 / (1+Math.exp(-x[i]));
         }
         return sigmoidMultiplied;
     }
@@ -82,7 +82,7 @@ public class RNN {
     public double[] dsigmoid(double[] x){
         double[] dsigmoidMultiplied = new double[x.length];
         for (int i = 0 ; i < x.length; i++){
-            dsigmoidMultiplied[i] = 1 / (1-x[i]);
+            dsigmoidMultiplied[i] = 1 / (1+Math.exp(-x[i]));
         }
         for (int i = 0 ; i < x.length; i++){
             dsigmoidMultiplied[i] *= 1 - dsigmoidMultiplied[i];
@@ -96,7 +96,8 @@ public class RNN {
 
         double[] cs, hs; //these come from the main class variables
         double[] f, inp,c, o; // these come from the forward prop only variables
-
+        ///System.out.println("check2");
+        //JMath.printArray(this.ai);
         for(int i = 1; i < recurrences+1; i++){
             lstm.x = JMath.hStack(this.ha[i-1], this.x);
             lstm.forwardProp();
@@ -116,6 +117,8 @@ public class RNN {
             this.ca[i] = cs;
             this.ha[i] = hs;
             this.af[i] = f;
+            //System.out.println("inp");
+            //JMath.isOne(inp);
             this.ai[i] = inp;
             this.ac[i] = c;
             this.ao[i] = o;
@@ -153,6 +156,9 @@ public class RNN {
             } else {
                 lstm.x = JMath.hStack(this.ha[i-1], this.ia[i]);
             }
+            //System.out.println("check1");
+            //JMath.printArray(this.ai[i]);
+            //JMath.isOne(this.ai[i]);
             JMath.containsNAN(lstm.x);
             lstm.cs = ca[i];
             JMath.containsNAN(lstm.cs);

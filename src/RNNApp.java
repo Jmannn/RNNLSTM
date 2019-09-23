@@ -3,7 +3,7 @@ import java.util.Random;
 public class RNNApp {
     public static void main(String[] args) {
         System.out.println("Initialise Hyperparameters");
-        int iterations = 3;
+        int iterations = 20;
         double learningRate = 0.001;
         System.out.println("Reading I/O from textfile");
         TextFileIO io = new TextFileIO("/home/johnny/IdeaProjects/RNN/resources/test.txt");

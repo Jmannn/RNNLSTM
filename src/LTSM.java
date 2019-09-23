@@ -51,15 +51,18 @@ public class LTSM {
         //sigmoid function does return an array becuase in python,
         // when you pass an array to a function, and you return it, it returns multiple
         // times to a new array.
+        //JMath.isOne(x);
         JMath.containsNAN(x);
         double[] sigmoidMultiplied = new double[x.length];
         JMath.containsInfinity(x);
         for (int i = 0 ; i < x.length; i++){
-            sigmoidMultiplied[i] = 1 / (1-x[i]);
+            //1 / (1 + np.exp(-x))
+            sigmoidMultiplied[i] = 1 / (1+Math.exp(-x[i]));
             //System.out.println(1-x[i]);
         }
         JMath.containsNAN(sigmoidMultiplied);
         JMath.containsInfinity(sigmoidMultiplied);
+        //JMath.isOne(sigmoidMultiplied);
         return sigmoidMultiplied;
     }
     //check this function for the error
@@ -67,10 +70,9 @@ public class LTSM {
         double[] dsigmoidMultiplied = new double[x.length];
         JMath.containsNAN(x);
         JMath.containsInfinity(x);
-        System.out.println("dsig RNN");
-        JMath.printArray(x);
+        //JMath.printArray(x);
         for (int i = 0 ; i < x.length; i++){
-            dsigmoidMultiplied[i] = 1 / (1-x[i]);
+            dsigmoidMultiplied[i] = 1 / (1+Math.exp(-x[i]));
         }
         JMath.containsInfinity(dsigmoidMultiplied);
         for (int i = 0 ; i < x.length; i++){
@@ -110,7 +112,13 @@ public class LTSM {
         this.cs = JMath.dotProduct(this.f, this.cs);
         JMath.containsNAN(this.cs);
         //TODO: Happens after this point, maybe the this.i
+        //System.out.println("this.i");
+        //JMath.isOne(this.i);
+        //JMath.isOne(this.x);
+        //JMath.isOne(JMath.dotProduct(this.i, this.x));
         this.iF = sigmoid(JMath.dotProduct(this.i, this.x));
+        //JMath.isOne(this.iF);
+        //JMath.printArray(this.x);
         JMath.containsNAN(this.iF);
         this.cF = sigmoid(JMath.dotProduct(this.c, this.x));
         JMath.containsNAN(this.cF);
@@ -140,6 +148,8 @@ public class LTSM {
         JMath.containsInfinity(e);
         JMath.containsInfinity(pcs);
         JMath.containsInfinity(f);
+        //System.out.println("heasdfasdf");
+        //JMath.printArray(i);
         JMath.containsInfinity(i);
         JMath.containsInfinity(c);
         JMath.containsInfinity(o);
@@ -159,8 +169,6 @@ public class LTSM {
         di = JMath.dotProduct(dcs, c);
         JMath.containsInfinity(i);
         JMath.containsInfinity(di);
-        System.out.println("HSHSH");
-        JMath.printArray(i);
         iu = JMath.dotProduct(JMath.transpose(JMath.atleast2d(JMath.dotProduct(di, dsigmoid(i)))),
                 JMath.atleast2d(this.x));
         df = JMath.dotProduct(dcs, pcs);
