@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Jmannn/RNNLSTM.svg?branch=master)](https://travis-ci.org/Jmannn/RNNLSTM)
 # RNNLSTM
 ## Introduction
 This is my attempt at developing a java based lstm recurrent neural network as an exercise. It was originally meant to be
