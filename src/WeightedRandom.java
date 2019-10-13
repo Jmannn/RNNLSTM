@@ -1,34 +1,36 @@
-import java.util.NavigableMap;
 import java.util.Random;
-import java.util.TreeMap;
-//https://stackoverflow.com/questions/6409652/random-weighted-selection-in-java
 public class WeightedRandom {
-    private final NavigableMap<Double, Character> map = new TreeMap<Double, Character>();
-    private final Random random;
-    private double total = 0;
+
+    private double total;
+    private char[] data;
+    private double[] probWheel;
+    private Random ran;
 
     public WeightedRandom(char[] data, double[] prob) {
-        this.random = new Random();
-        for (int i = 0; i < data.length; i++) {
-            add(prob[i],data[i]);
+        this.ran = new Random();
+        this.data = data;
+        this.total = 0;
+        this.probWheel = new double[prob.length];
+        //JMath.containsNAN(prob);
+        for (int i = 0; i < prob.length; i++) {
+            this.total += prob[i];
+            this.probWheel[i] = this.total;
         }
+
     }
 
-    public void add(double weight, Character result) {
-        if (!(weight < 0)) {
-            total += weight;
-            map.put(total, result);
-        } else {
-            System.err.println("weight cannot be less than zero");
-        }
-    }
 
-    public double pick() {
-        double value = random.nextDouble() * total;
-        System.err.println("Fails at pick method of WR");
-        for (NavigableMap.Entry<Double, Character> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + ":" + entry.getValue().toString());
+    public char pick() {
+        char pick;
+        //rangeMin + (rangeMax - rangeMin) * r.nextDouble();
+        double choice = this.total * ran.nextDouble();
+        for (int i = 0; i < probWheel.length-1; i++) {
+
+            if(probWheel[i]> choice){
+
+                return this.data[i];
+            }
         }
-        return map.higherEntry(value).getValue();
+        return this.data[this.data.length-1];
     }
 }

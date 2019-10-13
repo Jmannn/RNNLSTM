@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Scanner;
@@ -102,20 +103,25 @@ public class TextFileIO {
     public void export(double[][] output, char[] data, String filename){
         StringBuilder outputText = new StringBuilder();//use .append() for char
         WeightedRandom wr;
-        JMath.printArray(output);
+        //JMath.printArray(output);
+        JMath.containsNAN(output);
+        JMath.containsInfinity(output);
         double[] prob = new double[output[0].length];
+
 
         for (int i = 0; i < output.length; i++) {
             for (int j = 0; j < output[i].length; j++) {
-
                 prob[j] = output[i][j] / JMath.sum1D(output[i]);
             }
 
+            //JMath.containsNAN(prob);
             wr = new WeightedRandom(data, prob);
             //outputText += np.random.choice(data, p=prob)
             outputText.append(wr.pick());
+
             //p assigns a choice to each one of the array indexes
         }
+        System.out.println(outputText.toString());
 
         try  {
             PrintWriter pw = new PrintWriter(filename);

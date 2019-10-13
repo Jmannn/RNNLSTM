@@ -3,7 +3,7 @@ import java.util.Random;
 public class RNNApp {
     public static void main(String[] args) {
         System.out.println("Initialise Hyperparameters");
-        int iterations = 20;
+        int iterations = 10000;
         double learningRate = 0.001;
         System.out.println("Reading I/O from textfile");
         TextFileIO io = new TextFileIO("/home/johnny/IdeaProjects/RNN/resources/test.txt");
@@ -23,7 +23,7 @@ public class RNNApp {
             error = rnn.backProp();
             System.out.println("Error for iteration i: "+ i + " : " + error);
             //JMath.printArray(rnn.sample());
-            if ((error > -10 && error < 10) || (i % 10 == 0)){
+            /*if ((error > -10 && error < 10) || (i % 10 == 0)){
                 seed = new double[rnn.x.length];
                 randomSeedInt = ran.nextInt(seed.length);
                 //selects the word basically, by denoting a 1
@@ -32,8 +32,17 @@ public class RNNApp {
                 output = rnn.sample();
                 io.export(output,io.getData(),"/home/johnny/IdeaProjects/RNN/resources/out.txt");
 
-            }
+            }*/
         }
+        seed = new double[rnn.x.length];
+        randomSeedInt = ran.nextInt(seed.length);
+        //selects the word basically, by denoting a 1
+        seed[randomSeedInt] = 1;
+        rnn.x = seed;
+
+        output = rnn.sample();
+        //JMath.printArray(output);
+        io.export(output,io.getData(),"/home/johnny/IdeaProjects/RNN/resources/out.txt");
 
     }
 }
